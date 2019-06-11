@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameOfLife
@@ -23,6 +17,7 @@ namespace GameOfLife
         int infectedLifeSpan = 5;
         bool startFrame = true;
         bool pauseLife = false;
+        bool gameOutOfMoves = false;
 
         public frmMain()
         {
@@ -65,7 +60,7 @@ namespace GameOfLife
                     boardState[x, y] = cell.Cell(g, xpos, ypos, cellWidth, cellHeight);
                 }
             }
-            CleanBoard = boardState; // clean board, yes it's overkill but having a clean board will make life easier
+            CleanBoard = boardState; 
             tempState = CleanBoard;
         }
 
@@ -75,7 +70,7 @@ namespace GameOfLife
             {
                 for (int x = 0; x < cellsWide; x++)
                 {
-                    boardState[x, y] = cell.CellState(g, tempState[x, y], tempState[x, y].IsAlive);
+                    boardState[x, y] = cell.CellState(g, tempState[x, y], tempState[x, y].IsAlive, tempState[x, y].IsInfected);
                 }
             }
         }
@@ -103,6 +98,14 @@ namespace GameOfLife
             }
         }
 
+        public void GiveLifeToRandomCell(Graphics g)
+        {
+            Random rn = new Random();
+            int randomY = rn.Next(0, cellsHigh - 1);
+            int randomX = rn.Next(0, cellsWide - 1);
+            boardState[randomX, randomY] = cell.CellRandomState(g, boardState[randomX, randomY], rn);
+        }
+
         public void CheckSurroundingState()
         {
             Random infectChance = new Random();
@@ -125,64 +128,69 @@ namespace GameOfLife
                             }
                         }
                     }
-                    tempState[x, y] = CellCountRule(boardState[x, y], tempState[x, y], liveCellCount, infectChance);
-                    liveCellCount = 0;
+                    if (boardState[x, y].IsInfected == true)
+                    {
+                        tempState[x, y].IsInfected = boardState[x, y].IsInfected;
+                        --tempState[x, y].InfectedLifeSpan;
+                        if (tempState[x, y].InfectedLifeSpan <= 0)
+                        {
+                            tempState[x, y].IsInfected = false;
+                        }
+                        foreach (var adjacent in cell.GetSurroundingCells()) // make a dead zone around the virus cell 
+                        {
+                            int adjacentX = x + adjacent.Item1;
+                            int adjacentY = y + adjacent.Item2;
+
+                            if (cell.CheckIfCellIsInBounds(adjacentX, adjacentY, cellsWide, cellsHigh)) 
+                            {
+                                if ((bool)boardState[adjacentX, adjacentY].IsAlive)
+                                {
+                                    tempState[adjacentX, adjacentY].IsAlive = false;
+                                }
+                            }
+                        }
+                        continue;
+                    }
+                    else
+                    {
+                        tempState[x, y] = CellCountRule(boardState[x, y], tempState[x, y], liveCellCount, infectChance);
+                        liveCellCount = 0;
+                    }
                 }
             }
         }
 
         private Cells CellCountRule(Cells current, Cells temp, int otherCellsState, Random infectChance)
         {
-            if (otherCellsState == 0 && current.IsAlive == true || otherCellsState == 1 && current.IsAlive == true)
+            if (current.IsInfected == false)
             {
-                temp.IsAlive = false;
-            }
-            else if (otherCellsState == 2 && current.IsAlive == true || otherCellsState == 3 && current.IsAlive == true)
-            {
-                temp.IsAlive = true;
-            }
-            else if (otherCellsState > 3 && current.IsAlive == true)
-            {
-                temp.IsAlive = false;
-                temp = InfectCell(temp, infectChance);
-
-            }
-            else if (otherCellsState == 3 && current.IsAlive == false)
-            {
-                temp.IsAlive = true;
+                if (otherCellsState == 0 && current.IsAlive == true || otherCellsState == 1 && current.IsAlive == true)
+                {
+                    temp.IsAlive = false;
+                }
+                else if (otherCellsState == 2 && current.IsAlive == true || otherCellsState == 3 && current.IsAlive == true)
+                {
+                    temp.IsAlive = true;
+                }
+                else if (otherCellsState > 3 && current.IsAlive == true)
+                {
+                    temp.IsAlive = false;
+                    temp = cell.InfectCell(current, infectChance, infectedLifeSpan);
+                }
+                else if (otherCellsState == 3 && current.IsAlive == false)
+                {
+                    temp.IsAlive = true;
+                }
             }
             return temp;
         }
-
-        private Cells InfectCell(Cells cell, Random infectChance)
-        {
-            int ic = infectChance.Next(1, 26);
-            if (ic == 3)
-                cell.IsInfected = true;
-            return cell;
-        }
-
-        //private Cells InfectAdjacentCells(Cells current, Cells temp, Random infectChance)
-        //{
-        //    // run this with the checks above somehow to infect adjacent cells
-        //    //remember that they only live a short while
-
-        //}
-
-        private void btnPauseLife_Click_1(object sender, EventArgs e)
+        
+        private void btnPauseLife_Click(object sender, EventArgs e)
         {
             pauseLife = pauseLife == false ? true : false;
             RunLife();
         }
 
-        // for testing just about anything
-        private void btnTest_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        
     }
-
-
+   
 }

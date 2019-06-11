@@ -28,21 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnTest = new System.Windows.Forms.Button();
             this.pbxGoLBoard = new System.Windows.Forms.PictureBox();
             this.btnPauseLife = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbxGoLBoard)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnTest
-            // 
-            this.btnTest.Location = new System.Drawing.Point(87, 839);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(75, 23);
-            this.btnTest.TabIndex = 1;
-            this.btnTest.Text = "test";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click_1);
             // 
             // pbxGoLBoard
             // 
@@ -61,7 +50,7 @@
             this.btnPauseLife.TabIndex = 3;
             this.btnPauseLife.Text = "Pause";
             this.btnPauseLife.UseVisualStyleBackColor = true;
-            this.btnPauseLife.Click += new System.EventHandler(this.btnPauseLife_Click_1);
+            this.btnPauseLife.Click += new System.EventHandler(this.btnPauseLife_Click);
             // 
             // frmMain
             // 
@@ -70,7 +59,6 @@
             this.ClientSize = new System.Drawing.Size(834, 911);
             this.Controls.Add(this.btnPauseLife);
             this.Controls.Add(this.pbxGoLBoard);
-            this.Controls.Add(this.btnTest);
             this.Name = "frmMain";
             this.Text = "Game Of Life";
             ((System.ComponentModel.ISupportInitialize)(this.pbxGoLBoard)).EndInit();
@@ -79,7 +67,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.PictureBox pbxGoLBoard;
         private System.Windows.Forms.Button btnPauseLife;
     }

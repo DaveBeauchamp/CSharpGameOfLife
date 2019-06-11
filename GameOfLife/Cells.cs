@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Drawing;
 
-// this is basic for now, make other shapes that can be loaded. but for now make zombie/virus cells cull population
 namespace GameOfLife
 {
     public class Cells
@@ -53,7 +48,6 @@ namespace GameOfLife
                 else if (cell.IsInfected == true)
                 {
                     g.FillRectangle(greenBrush, cell.BoardCell);
-                    //cell.InfectedLifeSpan = 5;
                 }
                 else
                 {
@@ -87,6 +81,17 @@ namespace GameOfLife
                 {
                     g.FillRectangle(whiteBrush, cell.BoardCell);
                 }
+            }
+            return cell;
+        }
+
+        public Cells InfectCell(Cells cell, Random infectChance, int infectedLifeSpan)
+        {
+            int ic = infectChance.Next(1, 26);
+            if (ic == 3)
+            {
+                cell.IsInfected = true;
+                cell.InfectedLifeSpan = infectedLifeSpan;
             }
             return cell;
         }
