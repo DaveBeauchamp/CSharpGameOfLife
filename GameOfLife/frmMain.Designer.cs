@@ -30,6 +30,7 @@
         {
             this.btnTest = new System.Windows.Forms.Button();
             this.pbxGoLBoard = new System.Windows.Forms.PictureBox();
+            this.btnPauseLife = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbxGoLBoard)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,11 +53,22 @@
             this.pbxGoLBoard.TabStop = false;
             this.pbxGoLBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.pbxGoLBoard_Paint);
             // 
+            // btnPauseLife
+            // 
+            this.btnPauseLife.Location = new System.Drawing.Point(196, 839);
+            this.btnPauseLife.Name = "btnPauseLife";
+            this.btnPauseLife.Size = new System.Drawing.Size(75, 23);
+            this.btnPauseLife.TabIndex = 3;
+            this.btnPauseLife.Text = "Pause";
+            this.btnPauseLife.UseVisualStyleBackColor = true;
+            this.btnPauseLife.Click += new System.EventHandler(this.btnPauseLife_Click_1);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(834, 911);
+            this.Controls.Add(this.btnPauseLife);
             this.Controls.Add(this.pbxGoLBoard);
             this.Controls.Add(this.btnTest);
             this.Name = "frmMain";
@@ -69,6 +81,7 @@
         #endregion
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.PictureBox pbxGoLBoard;
+        private System.Windows.Forms.Button btnPauseLife;
     }
 }
 
